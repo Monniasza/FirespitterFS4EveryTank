@@ -1,0 +1,70 @@
+//CC-BY-SA
+//This patch adds FSfuelSwitch to all tanks.
+
+@PART[*]:HAS[@RESOURCE[LiquidFuel],!RESOURCE[MonoPropellant],!RESOURCE[Oxidizer]!MODULE[FSfuelSwitch],!MODULE[InterstellarFuelSwitch]] //bipropellant tanks
+{
+lforox = #$/RESOURCE[LiquidFuel]/amount$ //liquid fuel or oxidizer
+lfifplusox = #$/lforox$ //liquid fuel if plus oxidizer
+@lfifplusox *= 0.45
+oxifpluslf = #$/lforox$ //oxidizer if plus liquid fuel
+@oxifpluslf *= 0.55
+
+
+RESOURCE
+{
+	name = LiquidFuel
+	amount = 0
+	maxAmount = #$/lforox$
+}
+
+
+!RESOURCE[LiquidFuel] {}
+	MODULE
+	{
+		name = FSfuelSwitch
+		resourceNames = LiquidFuel;LiquidFuel,Oxidizer;Oxidizer
+		resourceAmounts = #$/lforox$ ; $/lfifplusox$ , $/oxifpluslf$ ; $/lforox$
+		basePartMass = #$/mass$
+		//tankMass = 0;0;0
+		//tankCost =0;0;0
+		displayCurrentTankCost = false
+		hasGUI = true
+		availableInFlight = false
+		availableInEditor = true
+		showInfo = true
+	}
+}
+
+@PART[*]:HAS[@RESOURCE[Oxidizer],@RESOURCE[LiquidFuel],!RESOURCE[MonoPropellant]!MODULE[FSfuelSwitch],!MODULE[InterstellarFuelSwitch]] //LF only tanks
+{
+lfifplusox = #$/RESOURCE[LiquidFuel]/amount$ //liquid fuel if plus oxidizer
+oxifpluslf = #$/RESOURCE[Oxidizer]/amount$ //oxidizer if plus liquid fuel
+lforox = #$/lfifplusox$ //liquid fuel or oxidizer
+@lforox += #$/oxifpluslf$
+
+RESOURCE
+{
+	name = LiquidFuel
+	amount = 0
+	maxAmount = #$/lforox$
+}
+
+
+!RESOURCE[LiquidFuel] {}
+!RESOURCE[Oxidizer] {}
+	MODULE
+	{
+		name = FSfuelSwitch
+		resourceNames = LiquidFuel,Oxidizer;LiquidFuel;Oxidizer
+		resourceAmounts = #$/lfifplusox$ , $/oxifpluslf$; $/lforox$; $/lforox$
+		basePartMass = #$/mass$
+		//tankMass = 0;0;0
+		//tankCost =0;0;0
+		displayCurrentTankCost = false
+		hasGUI = true
+		availableInFlight = false
+		availableInEditor = true
+		showInfo = true
+	}
+}
+
